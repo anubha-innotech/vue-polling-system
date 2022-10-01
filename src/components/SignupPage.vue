@@ -2,18 +2,19 @@
     <div id="container">
         <h2>SIGNUP</h2>
         <div id="form">
-            <!-- User Name  -->
-            <div class="field">{{nameEmptyError}}
+            <form @submit.prevent = "onSignup()">
+            <!-- User username  -->
+            <div class="field">
                 <label for="user-name" class="label-field">NAME:</label>
-                <input type="text" id="user-name" name="user-name" class="input-field" v-model="name"
-                    :class="{ 'red-border-bottom': nameEmptyError }">
-                <p class="error" v-if="nameEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
-                    name</p>
+                <input type="text" id="user-name" username="user-username" class="input-field" v-model="username"
+                    :class="{ 'red-border-bottom': userNameEmptyError }">
+                <p class="error" v-if="userNameEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
+                    username</p>
             </div>
             <!-- User Email  -->
-            <div class="field">{{emailEmptyError}}
+            <div class="field">
                 <label for="user-email" class="label-field">EMAIL:</label>
-                <input type="text" id="user-email" name="user-email" class="input-field" v-model="email"
+                <input type="text" id="user-email" username="user-email" class="input-field" v-model="email"
                     :class="{ 'red-border-bottom': emailEmptyError }">
                 <p class="error" v-if="emailEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
                     email</p>
@@ -21,7 +22,7 @@
             <!-- User Password  -->
             <div class="field">
                 <label for="user-password" class="label-field">PASSWORD:</label>
-                <input type="password" id="user-password" name="user-password" class="input-field"
+                <input type="password" id="user-password" username="user-password" class="input-field"
                     v-model="password"
                     :class="{ 'red-border-bottom': passwordEmptyError || passwordValidationError }">
                 <p class="error" v-if="passwordValidationError"><i class="fa-solid fa-circle-exclamation"></i>
@@ -30,13 +31,13 @@
                     password</p>
             </div>
             <!-- Terms And Conditions checkbox  -->
-            <input type="checkbox" name="terms-and-conditions" id="terms-and-conditions" v-model="termsAndConditions">
+            <input type="checkbox" username="terms-and-conditions" id="terms-and-conditions" v-model="termsAndConditions">
             <label for="terms-and-conditions" id="terms-and-conditions-label">ACCEPT TERMS AND CONDITIONS</label>
             <p class="error" v-if="termsAndConditionsUncheckedError"><i class="fa-solid fa-circle-exclamation"></i>
                 Check the terms and conditions field</p>
             <!-- "Create an Account" button  -->
-            <button @click="createAccount" id="create-account-btn">Create an Account</button>
-
+            <button id="create-account-btn" type="submit">Create an Account</button>
+            </form>
         </div>
         <div v-if="formValidated">
             <p>Email:{{ email }}</p>
@@ -57,68 +58,75 @@ import {
     // watch
 } from 'vue';
 
+import {useStore} from 'vuex'
+// import {computed} from 'vue'
 export default {
     setup() {
-        let name = ref("");
+        const store  =  useStore();
+
+        let username = ref("");
         let email = ref("");
         let password = ref("");
         let termsAndConditions = ref(false);
         const regularExpression = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
         let formValidated = ref("");
-        let nameEmptyError = ref(false);
+        let userNameEmptyError = ref(false);
         let emailEmptyError = ref(false);
         let passwordEmptyError = ref(false);
         let passwordValidationError =  ref(false);
         let termsAndConditionsUncheckedError = ref(false);
 
-        function createAccount() {
-            console.log("hello");
+        function onSignup() {
             formValidated.value = true;
             emailEmptyError.value = false;
             passwordEmptyError.value = false;
             passwordValidationError.value = false;
             termsAndConditionsUncheckedError.value = false;
 
-            if (name.value == "") {
-                nameEmptyError.value = true;
+            if (username.value == "") {
+                userNameEmptyError.value = true;
                 formValidated.value = false;
             }
             if (email.value == "") {
                 emailEmptyError.value = true;
-                formValidated.value = false;
+                formValidated.value = false;               
             }
             if (password.value == "") {
                 passwordEmptyError.value = true;
                 formValidated.value = false;
             }
-            if (name.value != "" && email.value != "" && password.value != "") {
+            if (username.value != "" && email.value != "" && password.value != "") {
                 if (termsAndConditions.value == false) {
                     termsAndConditionsUncheckedError.value = true;
                     formValidated.value = false;
                 }
             }
             if (password.value != "") {
-                console.log(regularExpression + password.value);
                 if (regularExpression.test(password.value)) {
-                    console.log("password validation");
                     passwordValidationError.value = true;
                     formValidated.value = false
                 }
             }
+
+            // Signup registration 
+            store.dispatch('signup/signup',{username: username.value, email: email.value, password: password.value},{root: true})
+          
         }
+        
         return{
-            name,
+            username,
             email,
             password,
             termsAndConditions,
             formValidated,
-            nameEmptyError,
+            userNameEmptyError,
             emailEmptyError,
             passwordEmptyError,
             passwordValidationError,
             termsAndConditionsUncheckedError,
-            createAccount,
+            onSignup,
         }
+
     }
 }
 </script>

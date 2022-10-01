@@ -2,6 +2,7 @@
     <div id="container">
         <h2>LOGIN</h2>
         <div id="form">
+            <form @submit.prevent = "onLogin()">
             <!-- User Email  -->
             <div class="field">{{emailEmptyError}}
                 <label for="user-email" class="label-field">EMAIL:</label>
@@ -27,8 +28,8 @@
             <p class="error" v-if="termsAndConditionsUncheckedError"><i class="fa-solid fa-circle-exclamation"></i>
                 Check the terms and conditions field</p>
             <!-- "Create an Account" button  -->
-            <button @click="createAccount" id="create-account-btn">Create an Account</button>
-
+            <button id="create-account-btn">Login</button>
+            </form>
         </div>
         <div v-if="formValidated">
             <p>Email:{{ email }}</p>
@@ -61,7 +62,7 @@ export default {
         let passwordValidationError =  ref(false);
         let termsAndConditionsUncheckedError = ref(false);
 
-        function createAccount() {
+        function onLogin() {
             console.log("hello");
             formValidated.value = true;
             emailEmptyError.value = false;
@@ -102,54 +103,9 @@ export default {
             passwordEmptyError,
             passwordValidationError,
             termsAndConditionsUncheckedError,
-            createAccount,
+            onLogin,
         }
     }
-    // data() {
-    //     return {
-    //         userEmail: "",
-    //         userPassword: "",
-    //         termsAndConditions: false,
-    //         regularExpression: /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-    //         formValidated: "",
-    //         userEmailEmptyError: false,
-    //         userPasswordEmptyError: false,
-    //         userPasswordValidationError: false,
-    //         termsAndConditionsUncheckedError: false,
-    //     }
-    // },
-    // methods: {
-    //     // function for "create an account" button: validation and submit
-    //     createAccount() {
-    //         this.formValidated = true;
-    //         this.userEmailEmptyError = false;
-    //         this.userPasswordEmptyError = false;
-    //         this.userPasswordValidationError = false;
-    //         this.termsAndConditionsUncheckedError = false;
-
-    //         if (this.userEmail == "") {
-    //             this.userEmailEmptyError = true;
-    //             this.formValidated = false;
-    //         }
-    //         if (this.userPassword == "") {
-    //             this.userPasswordEmptyError = true;
-    //             this.formValidated = false;
-    //         }
-    //         if (this.userEmail != "" && this.userPassword != "") {
-    //             if (this.termsAndConditions == false) {
-    //                 this.termsAndConditionsUncheckedError = true;
-    //                 this.formValidated = false;
-    //             }
-    //         }
-    //         if (this.userPassword != "") {
-    //             if (!this.regularExpression.test(this.userPassword)) {
-    //                 this.userPasswordValidationError = true;
-    //                 this.formValidated = false
-    //             }
-    //         }
-    //     },
-       
-    // }
 }
 </script>
 
