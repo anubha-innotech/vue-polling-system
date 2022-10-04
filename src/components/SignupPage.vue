@@ -2,6 +2,10 @@
 <div id="container">
     <h2>SIGNUP</h2>
     <div id="form">
+        <!-- Error alert  -->
+        <div class="alert alert-danger alert-error" role="alert" v-if="showError">
+            {{storeData.errorMessage}}
+        </div>
         <form @submit.prevent="onSignup()">
             <!-- User username  -->
             <div class="field">
@@ -34,6 +38,7 @@
             <!-- "Create an Account" button  -->
             <button id="create-account-btn" type="submit">Create an Account</button>
         </form>
+        {{storeData}}
     </div>
     <div v-if="formValidated">
         <p>Email:{{ email }}</p>
@@ -46,6 +51,7 @@
 <script>
 import {
     ref,
+    // toRef,
     // beforeRouteLeave,
     // reactive,
     // isReactive,
@@ -57,28 +63,26 @@ import {
 
 import {
     onBeforeRouteLeave,
+    useRouter
     // onBeforeRouteEnter
 } from 'vue-router'
 
 import {
     useStore
 } from 'vuex'
-// import {computed} from 'vue'
+import {
+    computed
+} from 'vue'
 export default {
     setup() {
-
+        const router = useRouter();
+        const storeData = ref('');
         onBeforeRouteLeave(() => {
             console.log("before route leave");
             console.log(store);
         })
-        // onBeforeRouteEnter((_,_1, next) => {
-        //next(vm => {
-        //console.log("before route enter");
-        //  console.log(vm.store)
-        //    })
-        //  })
         const store = useStore();
-
+        let showError = ref(false);
         let username = ref("");
         let email = ref("");
         let password = ref("");
@@ -91,7 +95,9 @@ export default {
         let passwordValidationError = ref(false);
         let termsAndConditionsUncheckedError = ref(false);
 
-        function onSignup() {
+        const onSignup = async () => {
+
+            // Validation of form 
             formValidated.value = true;
             emailEmptyError.value = false;
             passwordEmptyError.value = false;
@@ -124,17 +130,33 @@ export default {
             }
 
             // Signup registration 
-            store.dispatch('signup/signup', {
+            const result = await store.dispatch('signup/signup', {
                 username: username.value,
                 email: email.value,
                 password: password.value
             }, {
                 root: true
             })
+            console.log(result);
 
-        }
+            if (result) {
+                storeData.value = store.state.signup;
+                console.log(storeData.value);
+                showError.value = false;
+                router.push('/polling')
+            } else {
+                showError.value = true;
+                storeData.value = store.state.signup;
+                console.log(storeData.value);
+            }
+        };
+        const stateData = computed(() => {
+            console.log(stateData);
+            return store.getters.stateData
+        })
 
         return {
+            showError,
             username,
             email,
             password,
@@ -146,13 +168,19 @@ export default {
             passwordValidationError,
             termsAndConditionsUncheckedError,
             onSignup,
+            stateData,
+            storeData,
         }
 
     }
 }
 </script>
 
-<style>
+<style>git 
+.alert-error {
+    /* margin: 3px; */
+}
+
 #container {
     width: 60%;
     margin: auto;

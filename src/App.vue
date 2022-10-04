@@ -1,15 +1,18 @@
 <template>
   <NavigationBar/>
   <router-view />
+  <TheLoader/>
 </template>
 
 <script>
 import NavigationBar from './components/NavigationBar.vue'
+import TheLoader from './components/TheLoader.vue';
 
 export default {
   name: 'App',
   components: {
     NavigationBar,
+    TheLoader
 }
 }
 </script>

@@ -3,7 +3,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 const HomePage = () => import('./components/HomePage.vue');
 const LoginPage = () => import('./components/LoginPage.vue');
 const SignupPage = () => import('./components/SignupPage.vue');
-// const JobDetails = () => import('./components/JobDetails.vue');
+const PollingPage = () => import('./components/PollingPage.vue');
 const NotFound = () => import('./components/NotFound.vue');
 
 const routes = [
@@ -22,11 +22,11 @@ const routes = [
         path: '/signup',
         component: SignupPage
     },
-    // {
-    //     name: 'JobsPage',
-    //     path: '/jobs',
-    //     component: JobsPage,
-    // },
+    {
+        name: 'PollingPage',
+        path: '/polling',
+        component: PollingPage,
+    },
     // {
     //     name: 'JobDetails',
     //     path: '/jobs/:id',
