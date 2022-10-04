@@ -9,6 +9,8 @@ export default {
             password: '',
             token : '',
             username: '',
+            error: '',
+            errorMessage: '',
         }
     },
     getters: {},

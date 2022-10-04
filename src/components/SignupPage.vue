@@ -1,30 +1,26 @@
 <template>
-    <div id="container">
-        <h2>SIGNUP</h2>
-        <div id="form">
-            <form @submit.prevent = "onSignup()">
+<div id="container">
+    <h2>SIGNUP</h2>
+    <div id="form">
+        <form @submit.prevent="onSignup()">
             <!-- User username  -->
             <div class="field">
                 <label for="user-name" class="label-field">NAME:</label>
-                <input type="text" id="user-name" username="user-username" class="input-field" v-model="username"
-                    :class="{ 'red-border-bottom': userNameEmptyError }">
+                <input type="text" id="user-name" username="user-username" class="input-field" v-model="username" :class="{ 'red-border-bottom': userNameEmptyError }">
                 <p class="error" v-if="userNameEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
                     username</p>
             </div>
             <!-- User Email  -->
             <div class="field">
                 <label for="user-email" class="label-field">EMAIL:</label>
-                <input type="text" id="user-email" username="user-email" class="input-field" v-model="email"
-                    :class="{ 'red-border-bottom': emailEmptyError }">
+                <input type="text" id="user-email" username="user-email" class="input-field" v-model="email" :class="{ 'red-border-bottom': emailEmptyError }">
                 <p class="error" v-if="emailEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
                     email</p>
             </div>
             <!-- User Password  -->
             <div class="field">
                 <label for="user-password" class="label-field">PASSWORD:</label>
-                <input type="password" id="user-password" username="user-password" class="input-field"
-                    v-model="password"
-                    :class="{ 'red-border-bottom': passwordEmptyError || passwordValidationError }">
+                <input type="password" id="user-password" username="user-password" class="input-field" v-model="password" :class="{ 'red-border-bottom': passwordEmptyError || passwordValidationError }">
                 <p class="error" v-if="passwordValidationError"><i class="fa-solid fa-circle-exclamation"></i>
                     Password length should be 8 char, 1 special char, 1 number, 1 uppercase, and 1 lowercase</p>
                 <p class="error" v-if="passwordEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
@@ -37,19 +33,20 @@
                 Check the terms and conditions field</p>
             <!-- "Create an Account" button  -->
             <button id="create-account-btn" type="submit">Create an Account</button>
-            </form>
-        </div>
-        <div v-if="formValidated">
-            <p>Email:{{ email }}</p>
-            <p>Password: {{ password }}</p>
-            <p>Terms and Conditions: {{ termsAndConditions }}</p>
-        </div>
+        </form>
     </div>
+    <div v-if="formValidated">
+        <p>Email:{{ email }}</p>
+        <p>Password: {{ password }}</p>
+        <p>Terms and Conditions: {{ termsAndConditions }}</p>
+    </div>
+</div>
 </template>
 
 <script>
 import {
     ref,
+    // beforeRouteLeave,
     // reactive,
     // isReactive,
     // isRef,
@@ -58,11 +55,29 @@ import {
     // watch
 } from 'vue';
 
-import {useStore} from 'vuex'
+import {
+    onBeforeRouteLeave,
+    // onBeforeRouteEnter
+} from 'vue-router'
+
+import {
+    useStore
+} from 'vuex'
 // import {computed} from 'vue'
 export default {
     setup() {
-        const store  =  useStore();
+
+        onBeforeRouteLeave(() => {
+            console.log("before route leave");
+            console.log(store);
+        })
+        // onBeforeRouteEnter((_,_1, next) => {
+        //next(vm => {
+        //console.log("before route enter");
+        //  console.log(vm.store)
+        //    })
+        //  })
+        const store = useStore();
 
         let username = ref("");
         let email = ref("");
@@ -73,7 +88,7 @@ export default {
         let userNameEmptyError = ref(false);
         let emailEmptyError = ref(false);
         let passwordEmptyError = ref(false);
-        let passwordValidationError =  ref(false);
+        let passwordValidationError = ref(false);
         let termsAndConditionsUncheckedError = ref(false);
 
         function onSignup() {
@@ -89,7 +104,7 @@ export default {
             }
             if (email.value == "") {
                 emailEmptyError.value = true;
-                formValidated.value = false;               
+                formValidated.value = false;
             }
             if (password.value == "") {
                 passwordEmptyError.value = true;
@@ -109,11 +124,17 @@ export default {
             }
 
             // Signup registration 
-            store.dispatch('signup/signup',{username: username.value, email: email.value, password: password.value},{root: true})
-          
+            store.dispatch('signup/signup', {
+                username: username.value,
+                email: email.value,
+                password: password.value
+            }, {
+                root: true
+            })
+
         }
-        
-        return{
+
+        return {
             username,
             email,
             password,

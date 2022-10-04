@@ -1,4 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router'
+// import store from './store/index'
 const HomePage = () => import('./components/HomePage.vue');
 const LoginPage = () => import('./components/LoginPage.vue');
 const SignupPage = () => import('./components/SignupPage.vue');
@@ -43,4 +44,8 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 });
+
+// router.beforeEach(() => {
+//     console.log(store);
+// })
 export default router;

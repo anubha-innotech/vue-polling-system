@@ -4,7 +4,7 @@
         <div id="form">
             <form @submit.prevent = "onLogin()">
             <!-- User Email  -->
-            <div class="field">{{emailEmptyError}}
+            <div class="field">
                 <label for="user-email" class="label-field">EMAIL:</label>
                 <input type="text" id="user-email" name="user-email" class="input-field" v-model="email"
                     :class="{ 'red-border-bottom': emailEmptyError }">
