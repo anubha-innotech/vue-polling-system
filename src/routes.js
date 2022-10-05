@@ -4,6 +4,7 @@ const HomePage = () => import('./components/HomePage.vue');
 const LoginPage = () => import('./components/LoginPage.vue');
 const SignupPage = () => import('./components/SignupPage.vue');
 const PollingPage = () => import('./components/PollingPage.vue');
+const MyAccount = () => import('./components/MyAccount.vue');
 const NotFound = () => import('./components/NotFound.vue');
 
 const routes = [
@@ -26,6 +27,11 @@ const routes = [
         name: 'PollingPage',
         path: '/polling',
         component: PollingPage,
+    },
+    {
+        name: 'MyAccount',
+        path: '/my-account',
+        component: MyAccount,
     },
     // {
     //     name: 'JobDetails',

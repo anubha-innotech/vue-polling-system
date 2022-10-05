@@ -62,7 +62,7 @@ import {
 } from 'vue';
 
 import {
-    onBeforeRouteLeave,
+    // onBeforeRouteLeave,
     useRouter
     // onBeforeRouteEnter
 } from 'vue-router'
@@ -70,17 +70,16 @@ import {
 import {
     useStore
 } from 'vuex'
-import {
-    computed
-} from 'vue'
+
 export default {
     setup() {
         const router = useRouter();
+
         const storeData = ref('');
-        onBeforeRouteLeave(() => {
-            console.log("before route leave");
-            console.log(store);
-        })
+        // onBeforeRouteLeave(() => {
+        //     console.log("before route leave");
+        //     console.log(store);
+        // })
         const store = useStore();
         let showError = ref(false);
         let username = ref("");
@@ -129,7 +128,7 @@ export default {
                 }
             }
 
-            // Signup registration 
+            // Signup registration
             const result = await store.dispatch('signup/signup', {
                 username: username.value,
                 email: email.value,
@@ -138,7 +137,8 @@ export default {
                 root: true
             })
             console.log(result);
-
+            
+            // Accessing store state if user successfully signs in ie. if result is true
             if (result) {
                 storeData.value = store.state.signup;
                 console.log(storeData.value);
@@ -150,10 +150,10 @@ export default {
                 console.log(storeData.value);
             }
         };
-        const stateData = computed(() => {
-            console.log(stateData);
-            return store.getters.stateData
-        })
+        // const stateData = computed(() => {
+        //     console.log(stateData);
+        //     return store.getters.stateData
+        // })
 
         return {
             showError,
@@ -168,7 +168,7 @@ export default {
             passwordValidationError,
             termsAndConditionsUncheckedError,
             onSignup,
-            stateData,
+            // stateData,
             storeData,
         }
 

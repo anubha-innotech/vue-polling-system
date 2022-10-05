@@ -16,7 +16,7 @@
 <style scoped>
 .loading-box{
     position: fixed;
-    top: -50%;
+    top: -80%;
     display: block;
     margin: auto;
     z-index: 999;

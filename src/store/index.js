@@ -10,11 +10,16 @@ const store = createStore({
     },
     state() {
         return {
-            // num : 10
+            showLoader : false,
         };
     },
     getters: {},
     actions: {}, 
+    mutations: {
+        showLoaderMutation(state, payload) {
+            state.showLoader = payload;
+        }
+    }
 })
 
 export default store;
