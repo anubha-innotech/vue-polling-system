@@ -143,7 +143,7 @@ export default {
                 storeData.value = store.state.signup;
                 console.log(storeData.value);
                 showError.value = false;
-                router.push('/polling')
+                router.push('/')
             } else {
                 showError.value = true;
                 storeData.value = store.state.signup;

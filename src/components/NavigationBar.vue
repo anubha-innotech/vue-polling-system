@@ -11,16 +11,22 @@
                 <!-- <li class="nav-item">
                     <router-link to="/" class="nav-menu nav-link active" aria-current="page">Home</router-link>
                 </li> -->
-                <li class="nav-item" v-if="!userSignupData.token">
+                <li class="nav-item" v-if="!userDetails.token">
                     <router-link to="/login" class="nav-menu nav-link">Login</router-link>
                 </li>
-                <li class="nav-item" v-if="!userSignupData.token">
+                <li class="nav-item" v-if="!userDetails.token">
                     <router-link to="/signup" class="nav-menu nav-link">Signup</router-link>
                 </li>
-                <li class="nav-item" v-if="userSignupData.token">
-                    <router-link to="/polling" class="nav-menu nav-link">Polling</router-link>
+                <li class="nav-item" v-if="userDetails.token">
+                    <router-link to="/all-users" class="nav-menu nav-link">UsersList</router-link>
                 </li>
-                <li class="nav-item" v-if="userSignupData.token">
+                <li class="nav-item" v-if="userDetails.token">
+                    <router-link to="/my-polls" class="nav-menu nav-link">My Polls</router-link>
+                </li>
+                <li class="nav-item" v-if="userDetails.token">
+                    <router-link to="/all-polls" class="nav-menu nav-link">All Polls</router-link>
+                </li>
+                <li class="nav-item" v-if="userDetails.token">
                     <router-link to="/my-account" class="nav-menu nav-link">My Account</router-link>
                 </li>
                 <!-- <li class="nav-item dropdown">
@@ -50,26 +56,22 @@
 </template>
 
 <script>
-  import { computed } from 'vue';
-  import {useStore} from 'vuex'
+
+  // import { computed } from 'vue';
+  // import {useStore} from 'vuex'
 export default {
     setup() {
-        // let userDetails = '';
-
-        // Getting the logged in user's details from local storage 
-        // if (localStorage.getItem('user') !== null) {
-        //     userDetails = JSON.parse(localStorage.getItem('user'));
-        // }
-        // console.log(userDetails);
-        // return {
-        //     userDetails,
-        // }
-        const store = useStore();
-             const userSignupData = computed(() => {
-            return store.state.signup
-        })
+        // const store = useStore();
+        //      const userDetails = computed(() => {
+        //     return store.state.signup
+        // })
+        let userDetails = '';
+            // Getting the logged in user's details from local storage 
+            if(localStorage.getItem('user') !== null){
+                userDetails = JSON.parse(localStorage.getItem('user'));
+            }
         return{
-          userSignupData
+          userDetails
         }
     }
 }

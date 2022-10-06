@@ -1,0 +1,3 @@
+<template>
+    all polls
+</template>
