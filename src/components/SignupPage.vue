@@ -176,10 +176,8 @@ export default {
 }
 </script>
 
-<style>git 
-.alert-error {
-    /* margin: 3px; */
-}
+<style>
+
 
 #container {
     width: 60%;

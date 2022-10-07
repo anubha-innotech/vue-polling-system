@@ -3,7 +3,6 @@ export default {
     async getUsersList(context) {
         console.log("users list actions");
         let response = '';
-        context.commit('showLoaderMutation', true, {root:true});
 
         response = await axios.post(
             `https://secure-refuge-14993.herokuapp.com/list_users`
