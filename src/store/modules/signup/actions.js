@@ -6,21 +6,23 @@ export default {
         let response = '';
         context.commit('showLoaderMutation', true, {root:true});
         response = await axios.post(
-            `https://secure-refuge-14993.herokuapp.com/add_user?username=${payload.username}&password=${payload.password}&role=admin`
+            `https://secure-refuge-14993.herokuapp.com/add_user?username=${payload.username}&password=${payload.password}&role=${payload.role}`
         );
         let responseData = response.data;
         if (response.data.error === 0) {
             console.log(responseData);
             context.commit('setUserTokenData', {
+                role: responseData.data.role,
                 password: responseData.data.password,
                 token: responseData.data.id,
                 username: responseData.data.username,
             })
-            context.commit('setLocalStorage', {
-                    password: responseData.data.password,
-                    token: responseData.data.id,
-                    username: responseData.data.username,
-            })
+            // context.commit('setLocalStorage', {
+            //         role : responseData.data.role,
+            //         password: responseData.data.password,
+            //         token: responseData.data.id,
+            //         username: responseData.data.username,
+            // })
             context.commit('showLoaderMutation', false, {root:true});
             return true;
         }

@@ -1,5 +1,4 @@
 <template>
-users list
 <!-- <button @click="showUsersList">Show users</button> -->
 <ul>
     <li v-for="users in usersList.usersList" :key="users.id">{{users.username}}</li>

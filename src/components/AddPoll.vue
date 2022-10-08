@@ -13,13 +13,32 @@
                     <input type="text" id="poll-title" class="input-field" v-model="pollTitle" :class="{ 'red-border-bottom': pollTitleEmptyError }">
                     <p class="error" v-if="pollTitleEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter title</p>
                 </div>
+                <div class="field">
+                    <label for="poll-option1" class="label-field">OPTION 1:</label>
+                    <input type="textarea" id="poll-option1" class="input-field" v-model="option1" >
+                </div>
+                <div class="field">
+                    <label for="poll-option2" class="label-field">OPTION 2:</label>
+                    <input type="textarea" id="poll-option2" class="input-field" v-model="option2" >
+                </div>
+                <div class="field">
+                    <label for="poll-option3" class="label-field">OPTION 3:</label>
+                    <input type="textarea" id="poll-option3" class="input-field" v-model="option3" >
+                </div>
+                <div class="field">
+                    <label for="poll-option4" class="label-field">OPTION 4:</label>
+                    <input type="textarea" id="poll-option4" class="input-field" v-model="option4" >
+                    <p class="error" v-if="optionEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter minimum 2 options to poll</p>
+                </div>
+                <button id="create-account-btn" type="submit" >Add Poll</button>
+
             </form>
             {{storeData}}
         </div>
         <div v-if="formValidated">
-            <p>Email:{{ email }}</p>
-            <p>Password: {{ password }}</p>
-            <p>Terms and Conditions: {{ termsAndConditions }}</p>
+            <p>TITLE:{{ pollTitle }}</p>
+        <p>opt 1: {{ option1 }}</p>
+        <p>opt 2: {{ option2 }}</p>
         </div>
     </div>
     </template>
@@ -27,21 +46,11 @@
     <script>
     import {
         ref,
-        // toRef,
-        // beforeRouteLeave,
-        // reactive,
-        // isReactive,
-        // isRef,
-        // toRefs,
-        // computed,
-        // watch
     } from 'vue';
     
-    import {
-        // onBeforeRouteLeave,
-        useRouter
-        // onBeforeRouteEnter
-    } from 'vue-router'
+    // import {
+    //     useRouter
+    // } from 'vue-router'
     
     import {
         useStore
@@ -49,114 +58,88 @@
     
     export default {
         setup() {
-            const router = useRouter();
-    
-            const storeData = ref('');
-            // onBeforeRouteLeave(() => {
-            //     console.log("before route leave");
-            //     console.log(store);
-            // })
+            // const router = useRouter();
             const store = useStore();
-            let showError = ref(false);
+            const storeData = ref('');
             let pollTitle = ref("");
-            let email = ref("");
-            let password = ref("");
-            let termsAndConditions = ref(false);
-            const regularExpression = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
+            let option1 = ref("");
+            let option2 = ref("");
+            let option3 = ref("");
+            let option4 = ref("");
+            let optionEmptyError = ref(false);
             let formValidated = ref("");
-            let userNameEmptyError = ref(false);
-            let emailEmptyError = ref(false);
-            let passwordEmptyError = ref(false);
-            let passwordValidationError = ref(false);
-            let termsAndConditionsUncheckedError = ref(false);
+            let pollTitleEmptyError = ref(false);
     
-            const onSignup = async () => {
+            const onAddingPoll = async () => {
     
                 // Validation of form 
                 formValidated.value = true;
-                emailEmptyError.value = false;
-                passwordEmptyError.value = false;
-                passwordValidationError.value = false;
-                termsAndConditionsUncheckedError.value = false;
+                optionEmptyError.value = false;
+                pollTitleEmptyError.value = false;
     
-                if (username.value == "") {
-                    userNameEmptyError.value = true;
+                if (pollTitle.value == "") {
+                    pollTitleEmptyError.value = true;
                     formValidated.value = false;
                 }
-                if (email.value == "") {
-                    emailEmptyError.value = true;
+                if (option1.value == "") {
+                    optionEmptyError.value = true;
                     formValidated.value = false;
                 }
-                if (password.value == "") {
-                    passwordEmptyError.value = true;
+                if (option2.value == "") {
+                    optionEmptyError.value = true;
                     formValidated.value = false;
                 }
-                if (username.value != "" && email.value != "" && password.value != "") {
-                    if (termsAndConditions.value == false) {
-                        termsAndConditionsUncheckedError.value = true;
-                        formValidated.value = false;
-                    }
-                }
-                if (password.value != "") {
-                    if (regularExpression.test(password.value)) {
-                        passwordValidationError.value = true;
-                        formValidated.value = false
-                    }
-                }
-    
-                // Signup registration
-                const result = await store.dispatch('signup/signup', {
-                    username: username.value,
-                    email: email.value,
-                    password: password.value
+
+                if(formValidated.value) {
+                    // Signup registration
+                    const result = await store.dispatch('addPoll/addPoll', {
+                    pollTitle: pollTitle.value,
+                    option1: option1.value,
+                    option2: option2.value,
+                    option3: option3.value,
+                    option4: option4.value,
                 }, {
                     root: true
                 })
                 console.log(result);
                 
-                // Accessing store state if user successfully signs in ie. if result is true
+                // Accessing store state if user successfully added poll in ie. if result is true
                 if (result) {
-                    storeData.value = store.state.signup;
-                    console.log(storeData.value);
-                    showError.value = false;
-                    router.push('/')
-                } else {
-                    showError.value = true;
-                    storeData.value = store.state.signup;
+                    storeData.value = store.state.addPoll;
                     console.log(storeData.value);
                 }
-            };
-            // const stateData = computed(() => {
-            //     console.log(stateData);
-            //     return store.getters.stateData
-            // })
+                
+                pollTitle.value = "";
+                option1.value = "";
+                option2.value = "";
+                option3.value = "";
+                option4.value = "";
+                }
+             
     
+                
+             
+                }
             return {
                 pollTitle,
-                showError,
-                username,
-                email,
-                password,
-                termsAndConditions,
+                option1,
+                option2,
+                option3,
+                option4,
+                optionEmptyError,
+                pollTitleEmptyError,
                 formValidated,
-                userNameEmptyError,
-                emailEmptyError,
-                passwordEmptyError,
-                passwordValidationError,
-                termsAndConditionsUncheckedError,
-                onSignup,
-                // stateData,
+                onAddingPoll,
                 storeData,
             }
     
-        }
+        
+    }
     }
     </script>
     
-    <style>git 
-    .alert-error {
-        /* margin: 3px; */
-    }
+    <style>
+
     
     #container {
         width: 60%;
@@ -199,31 +182,7 @@
     #form input:focus {
         outline: none;
     }
-    
-    #user-role {
-        width: 100%;
-        border: none;
-        font-size: 1em;
-        color: gray;
-        margin-top: 15px;
-        background-color: rgb(228, 228, 228);
-        padding: 5px 2px;
-    }
-    
-    #user-role:focus {
-        border: none;
-        outline: none;
-    }
-    
-    #user-role option {
-        background-color: rgb(236, 236, 236);
-    }
-    
-    #terms-and-conditions-label {
-        margin-left: 10px;
-    }
-    
-    .error {
+  .error {
         color: tomato;
         margin: 5px;
         font-size: .8em;
