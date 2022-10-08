@@ -1,6 +1,6 @@
 export default{
     setUserTokenData(state,payload) {
-        // state.email = payload.email;
+        state.role = payload.role;
         state.password = payload.password
         state.token = payload.token;
         state.username = payload.username;
@@ -11,13 +11,13 @@ export default{
         state.errorMessage = payload.errorMessage
     },
 
-    setLocalStorage(_, payload){
-        let user = {
-            'name' : payload.username,
-            // 'email' : payload.email,
-            'token' : payload.token,
-            'password' : payload.password,
-        }
-        localStorage.setItem('user', JSON.stringify(user));
-    }
+    // setLocalStorage(_, payload){
+    //     let user = {
+    //         'name' : payload.username,
+    //         'role' : payload.role,
+    //         'token' : payload.token,
+    //         'password' : payload.password,
+    //     }
+    //     localStorage.setItem('user', JSON.stringify(user));
+    // }
 }

@@ -11,17 +11,23 @@
                 <!-- <li class="nav-item">
                     <router-link to="/" class="nav-menu nav-link active" aria-current="page">Home</router-link>
                 </li> -->
-                <li class="nav-item" v-if="!userSignupData.token">
-                    <router-link to="/login" class="nav-menu nav-link">Login</router-link>
+                <li class="nav-item">
+                    <router-link to="/login" v-if="!token" class="nav-menu nav-link">Login</router-link>
                 </li>
-                <li class="nav-item" v-if="!userSignupData.token">
-                    <router-link to="/signup" class="nav-menu nav-link">Signup</router-link>
+                <li class="nav-item" >
+                    <router-link to="/signup" v-if="!token" class="nav-menu nav-link">Signup</router-link>
                 </li>
-                <li class="nav-item" v-if="userSignupData.token">
-                    <router-link to="/polling" class="nav-menu nav-link">Polling</router-link>
+                <li class="nav-item" >
+                    <router-link to="/all-users" v-if="token" class="nav-menu nav-link">UsersList</router-link>
                 </li>
-                <li class="nav-item" v-if="userSignupData.token">
-                    <router-link to="/my-account" class="nav-menu nav-link">My Account</router-link>
+                <li class="nav-item">
+                    <router-link to="/add-poll" v-if="token" class="nav-menu nav-link">Add Poll</router-link>
+                </li>
+                <li class="nav-item">
+                    <router-link to="/all-polls" v-if="token" class="nav-menu nav-link">All Polls</router-link>
+                </li>
+                <li class="nav-item" >
+                    <router-link to="/my-account" v-if="token" class="nav-menu nav-link">My Accounts</router-link>
                 </li>
                 <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,9 +46,10 @@
                     <a class="nav-link disabled">Disabled</a>
                 </li> -->
             </ul>
+            <span class="float-right signout" v-if="token" @click="onSignout">Signout</span>
             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+                <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
             </form>
         </div>
     </div>
@@ -50,27 +57,42 @@
 </template>
 
 <script>
-  import { computed } from 'vue';
-  import {useStore} from 'vuex'
+
+//   import { ref } from 'vue';
+  // import {useStore} from 'vuex'
+  import {
+    useRouter
+  } from 'vue-router'
 export default {
     setup() {
-        // let userDetails = '';
+        const router = useRouter();
 
-        // Getting the logged in user's details from local storage 
-        // if (localStorage.getItem('user') !== null) {
-        //     userDetails = JSON.parse(localStorage.getItem('user'));
-        // }
-        // console.log(userDetails);
-        // return {
-        //     userDetails,
-        // }
-        const store = useStore();
-             const userSignupData = computed(() => {
-            return store.state.signup
-        })
+        // const store = useStore();
+        //      const userDetails = computed(() => {
+        //     return store.state.signup
+        // })
+        let token = '';
+            // Getting the logged in user's token from local storage 
+            if(localStorage.getItem('token') !== null){
+                token = JSON.parse(localStorage.getItem('token'));
+            }
+        
+        function onSignout() {
+            localStorage.clear();
+            router.push('/')
+        }
         return{
-          userSignupData
+          token,
+          onSignout,
         }
     }
 }
 </script>
+
+<style>
+    .signout{
+        cursor: pointer;
+        color: white;
+        margin: 0 10px;
+    }
+</style>

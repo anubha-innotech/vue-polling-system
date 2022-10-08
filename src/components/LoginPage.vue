@@ -1,22 +1,23 @@
 <template>
-    <div id="container">
-        <h2>LOGIN</h2>
-        <div id="form">
-            <form @submit.prevent = "onLogin()">
-            <!-- User Email  -->
+<div id="container">
+    <h2>LOGIN</h2>
+    <div id="form">
+        <!-- Error alert  -->
+        <div class="alert alert-danger alert-error" role="alert" v-if="showError">
+            {{storeData.errorMessage}}
+        </div>
+        <form @submit.prevent="onLogin()">
+            <!-- Username  -->
             <div class="field">
-                <label for="user-email" class="label-field">EMAIL:</label>
-                <input type="text" id="user-email" name="user-email" class="input-field" v-model="email"
-                    :class="{ 'red-border-bottom': emailEmptyError }">
-                <p class="error" v-if="emailEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
-                    email</p>
+                <label for="username" class="label-field">USERNAME:</label>
+                <input type="text" id="username" name="username" class="input-field" v-model="username" :class="{ 'red-border-bottom': usernameEmptyError }">
+                <p class="error" v-if="usernameEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
+                    username</p>
             </div>
             <!-- User Password  -->
             <div class="field">
                 <label for="user-password" class="label-field">PASSWORD:</label>
-                <input type="password" id="user-password" name="user-password" class="input-field"
-                    v-model="password"
-                    :class="{ 'red-border-bottom': passwordEmptyError || passwordValidationError }">
+                <input type="password" id="user-password" name="user-password" class="input-field" v-model="password" :class="{ 'red-border-bottom': passwordEmptyError || passwordValidationError }">
                 <p class="error" v-if="passwordValidationError"><i class="fa-solid fa-circle-exclamation"></i>
                     Password length should be 8 char, 1 special char, 1 number, 1 uppercase, and 1 lowercase</p>
                 <p class="error" v-if="passwordEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
@@ -29,57 +30,54 @@
                 Check the terms and conditions field</p>
             <!-- "Create an Account" button  -->
             <button id="create-account-btn">Login</button>
-            </form>
-        </div>
-        <div v-if="formValidated">
-            <p>Email:{{ email }}</p>
-            <p>Password: {{ password }}</p>
-            <p>Terms and Conditions: {{ termsAndConditions }}</p>
-        </div>
+        </form>
     </div>
+</div>
 </template>
 
 <script>
 import {
     ref,
-    // reactive,
-    // isReactive,
-    // isRef,
-    // toRefs,
-    // computed,
-    // watch
 } from 'vue';
+import { useRouter } from 'vue-router';
+
+import {
+    useStore
+} from 'vuex'
 
 export default {
     setup() {
-        let email = ref("");
+        let router = useRouter();
+        const storeData = ref('');
+        let showError = ref(false);
+        let store = useStore();
+        let username = ref("");
         let password = ref("");
         let termsAndConditions = ref(false);
         const regularExpression = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
         let formValidated = ref("");
-        let emailEmptyError = ref(false);
+        let usernameEmptyError = ref(false);
         let passwordEmptyError = ref(false);
-        let passwordValidationError =  ref(false);
+        let passwordValidationError = ref(false);
         let termsAndConditionsUncheckedError = ref(false);
 
-        function onLogin() {
+        const onLogin = async () => {
             console.log("hello");
             formValidated.value = true;
-            emailEmptyError.value = false;
+            usernameEmptyError.value = false;
             passwordEmptyError.value = false;
             passwordValidationError.value = false;
             termsAndConditionsUncheckedError.value = false;
 
-            if (email.value == "") {
-                emailEmptyError.value = true;
+            if (username.value == "") {
+                usernameEmptyError.value = true;
                 formValidated.value = false;
-                console.log("email empty" + formValidated.value + emailEmptyError.value);
             }
             if (password.value == "") {
                 passwordEmptyError.value = true;
                 formValidated.value = false;
             }
-            if (email.value != "" && password.value != "") {
+            if (username.value != "" && password.value != "") {
                 if (termsAndConditions.value == false) {
                     termsAndConditionsUncheckedError.value = true;
                     formValidated.value = false;
@@ -93,16 +91,41 @@ export default {
                     formValidated.value = false
                 }
             }
+
+            // Signup registration
+            let result = "";
+            if (formValidated.value) {
+                result = await store.dispatch('login/onLogin', {
+                    username: username.value,
+                    password: password.value
+                }, {
+                    root: true
+                })
+                console.log(result);
+                // Accessing store state if user successfully signs in ie. if result is true
+                if (result) {
+                    storeData.value = store.state.login;
+                    console.log(storeData.value);
+                    showError.value = false;
+                    router.push('/')
+                } else {
+                    showError.value = true;
+                    storeData.value = store.state.login;
+                    console.log(storeData.value);
+                }
+            }
         }
-        return{
-            email,
+        return {
+            username,
             password,
             termsAndConditions,
             formValidated,
-            emailEmptyError,
+            usernameEmptyError,
             passwordEmptyError,
             passwordValidationError,
             termsAndConditionsUncheckedError,
+            storeData,
+            showError,
             onLogin,
         }
     }

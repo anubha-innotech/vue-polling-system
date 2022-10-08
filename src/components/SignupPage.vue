@@ -9,17 +9,10 @@
         <form @submit.prevent="onSignup()">
             <!-- User username  -->
             <div class="field">
-                <label for="user-name" class="label-field">NAME:</label>
+                <label for="user-name" class="label-field">USERNAME:</label>
                 <input type="text" id="user-name" username="user-username" class="input-field" v-model="username" :class="{ 'red-border-bottom': userNameEmptyError }">
                 <p class="error" v-if="userNameEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
                     username</p>
-            </div>
-            <!-- User Email  -->
-            <div class="field">
-                <label for="user-email" class="label-field">EMAIL:</label>
-                <input type="text" id="user-email" username="user-email" class="input-field" v-model="email" :class="{ 'red-border-bottom': emailEmptyError }">
-                <p class="error" v-if="emailEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
-                    email</p>
             </div>
             <!-- User Password  -->
             <div class="field">
@@ -29,6 +22,22 @@
                     Password length should be 8 char, 1 special char, 1 number, 1 uppercase, and 1 lowercase</p>
                 <p class="error" v-if="passwordEmptyError"><i class="fa-solid fa-circle-exclamation"></i> Enter your
                     password</p>
+            </div>
+            <!-- User Profile  -->
+            <div class="field">              
+                <label class="label-field">PROFILE:</label>
+               <div class="form-check">
+                   <input class="form-check-input" type="radio" name="Admin" value="Admin" id="admin-role" checked v-model="role">
+                   <label class="form-check-label" for="admin-role">
+                       Admin
+                   </label>
+               </div>
+               <div class="form-check">
+                   <input class="form-check-input" type="radio" name="Guest" value="Guest" id="flexRadioDefault2" v-model="role">
+                   <label class="form-check-label" for="flexRadioDefault2">
+                       Guest
+                   </label>
+               </div>
             </div>
             <!-- Terms And Conditions checkbox  -->
             <input type="checkbox" username="terms-and-conditions" id="terms-and-conditions" v-model="termsAndConditions">
@@ -41,7 +50,7 @@
         {{storeData}}
     </div>
     <div v-if="formValidated">
-        <p>Email:{{ email }}</p>
+        <p>Role:{{ role }}</p>
         <p>Password: {{ password }}</p>
         <p>Terms and Conditions: {{ termsAndConditions }}</p>
     </div>
@@ -83,13 +92,12 @@ export default {
         const store = useStore();
         let showError = ref(false);
         let username = ref("");
-        let email = ref("");
         let password = ref("");
+        let role = ref('Admin');
         let termsAndConditions = ref(false);
         const regularExpression = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
         let formValidated = ref("");
         let userNameEmptyError = ref(false);
-        let emailEmptyError = ref(false);
         let passwordEmptyError = ref(false);
         let passwordValidationError = ref(false);
         let termsAndConditionsUncheckedError = ref(false);
@@ -98,7 +106,6 @@ export default {
 
             // Validation of form 
             formValidated.value = true;
-            emailEmptyError.value = false;
             passwordEmptyError.value = false;
             passwordValidationError.value = false;
             termsAndConditionsUncheckedError.value = false;
@@ -107,15 +114,11 @@ export default {
                 userNameEmptyError.value = true;
                 formValidated.value = false;
             }
-            if (email.value == "") {
-                emailEmptyError.value = true;
-                formValidated.value = false;
-            }
             if (password.value == "") {
                 passwordEmptyError.value = true;
                 formValidated.value = false;
             }
-            if (username.value != "" && email.value != "" && password.value != "") {
+            if (username.value != "" && password.value != "") {
                 if (termsAndConditions.value == false) {
                     termsAndConditionsUncheckedError.value = true;
                     formValidated.value = false;
@@ -129,26 +132,29 @@ export default {
             }
 
             // Signup registration
-            const result = await store.dispatch('signup/signup', {
-                username: username.value,
-                email: email.value,
-                password: password.value
-            }, {
-                root: true
-            })
-            console.log(result);
-            
-            // Accessing store state if user successfully signs in ie. if result is true
-            if (result) {
-                storeData.value = store.state.signup;
-                console.log(storeData.value);
-                showError.value = false;
-                router.push('/polling')
-            } else {
-                showError.value = true;
-                storeData.value = store.state.signup;
-                console.log(storeData.value);
+            let result = "";
+            if(formValidated.value){
+                 result = await store.dispatch('signup/signup', {
+                    role: role.value,
+                    username: username.value,
+                    password: password.value
+                }, {
+                    root: true
+                })
+                console.log(result);
+                // Accessing store state if user successfully signs in ie. if result is true
+                if (result) {
+                    storeData.value = store.state.signup;
+                    console.log(storeData.value);
+                    showError.value = false;
+                    router.push('/login')
+                } else {
+                    showError.value = true;
+                    storeData.value = store.state.signup;
+                    console.log(storeData.value);
+                }
             }
+
         };
         // const stateData = computed(() => {
         //     console.log(stateData);
@@ -158,12 +164,11 @@ export default {
         return {
             showError,
             username,
-            email,
+            role,
             password,
             termsAndConditions,
             formValidated,
             userNameEmptyError,
-            emailEmptyError,
             passwordEmptyError,
             passwordValidationError,
             termsAndConditionsUncheckedError,
@@ -176,11 +181,7 @@ export default {
 }
 </script>
 
-<style>git 
-.alert-error {
-    /* margin: 3px; */
-}
-
+<style>
 #container {
     width: 60%;
     margin: auto;
