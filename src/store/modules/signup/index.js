@@ -7,8 +7,9 @@ export default {
     state() {
         return {           
             password: '',
-            token : '',
+            id : '',
             username: '',
+            role: '',
             error: '',
             errorMessage: '',
         }

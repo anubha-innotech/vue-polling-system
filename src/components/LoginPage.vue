@@ -92,7 +92,7 @@ export default {
                 }
             }
 
-            // Signup registration
+            // login registration
             let result = "";
             if (formValidated.value) {
                 result = await store.dispatch('login/onLogin', {

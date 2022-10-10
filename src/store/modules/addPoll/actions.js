@@ -5,9 +5,21 @@ export default {
         console.log("add poll actions");
         let response = '';
         context.commit('showLoaderMutation', true, {root:true});
-        response = await axios.post(
-            `https://secure-refuge-14993.herokuapp.com/add_poll?title=${payload.pollTitle}%20polll&options=${payload.option1}____${payload.option2}____${payload.option3}____${payload.option4}`
-        );
+        if (payload.option3 === '' ) {
+            response = await axios.post(
+                `https://secure-refuge-14993.herokuapp.com/add_poll?title=${payload.pollTitle}%20polll&options=${payload.option1}____${payload.option2}`
+            );           
+        }
+        else if(payload.option4 === ''){
+            response = await axios.post(
+                `https://secure-refuge-14993.herokuapp.com/add_poll?title=${payload.pollTitle}%20polll&options=${payload.option1}____${payload.option2}____${payload.option3}`
+            );
+        }
+        else {
+            response = await axios.post(
+                `https://secure-refuge-14993.herokuapp.com/add_poll?title=${payload.pollTitle}%20polll&options=${payload.option1}____${payload.option2}____${payload.option3}____${payload.option4}`
+            );
+        }
         console.log(response);
         let responseData = response.data;
         if(response.status === 200){

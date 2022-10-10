@@ -47,12 +47,6 @@
             <!-- "Create an Account" button  -->
             <button id="create-account-btn" type="submit">Create an Account</button>
         </form>
-        {{storeData}}
-    </div>
-    <div v-if="formValidated">
-        <p>Role:{{ role }}</p>
-        <p>Password: {{ password }}</p>
-        <p>Terms and Conditions: {{ termsAndConditions }}</p>
     </div>
 </div>
 </template>
@@ -60,20 +54,11 @@
 <script>
 import {
     ref,
-    // toRef,
-    // beforeRouteLeave,
-    // reactive,
-    // isReactive,
-    // isRef,
-    // toRefs,
-    // computed,
-    // watch
+
 } from 'vue';
 
 import {
-    // onBeforeRouteLeave,
     useRouter
-    // onBeforeRouteEnter
 } from 'vue-router'
 
 import {
@@ -85,10 +70,6 @@ export default {
         const router = useRouter();
 
         const storeData = ref('');
-        // onBeforeRouteLeave(() => {
-        //     console.log("before route leave");
-        //     console.log(store);
-        // })
         const store = useStore();
         let showError = ref(false);
         let username = ref("");
