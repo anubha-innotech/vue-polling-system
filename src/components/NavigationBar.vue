@@ -8,25 +8,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <router-link to="/login" v-if="!userDetails.id" class="nav-menu nav-link">Login</router-link>
+                    <router-link to="/login" v-if="!userDetails.userDetails.id" class="nav-menu nav-link">Login</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/signup" v-if="!userDetails.id" class="nav-menu nav-link">Signup</router-link>
+                    <router-link to="/signup" v-if="!userDetails.userDetails.id" class="nav-menu nav-link">Signup</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/all-users" v-if="userDetails.id " class="nav-menu nav-link">UsersList</router-link>
+                    <router-link to="/all-users" v-if="userDetails.userDetails.id " class="nav-menu nav-link">UsersList
+                    </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/add-poll" v-if="userDetails.role == 'Admin'" class="nav-menu nav-link">Add Poll</router-link>
+                    <router-link to="/add-poll" v-if="userDetails.userDetails.role == 'Admin'" class="nav-menu nav-link">Add
+                        Poll</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/all-polls" v-if="userDetails.id" class="nav-menu nav-link">All Polls</router-link>
+                    <router-link to="/all-polls" v-if="userDetails.userDetails.id" class="nav-menu nav-link">All Polls
+                    </router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/my-account" v-if="userDetails.id" class="nav-menu nav-link">My Account</router-link>
+                    <router-link to="/my-account" v-if="userDetails.userDetails.id" class="nav-menu nav-link">My Account
+                    </router-link>
                 </li>
             </ul>
-            <span class="float-right signout" v-if="userDetails.id" @click="onSignout(); updateUserDetails()">Signout</span>
+            <span class="float-right signout" v-if="userDetails.userDetails.id" @click="onSignout()">Signout</span>
         </div>
     </div>
 </nav>
@@ -34,43 +38,35 @@
 
 <script>
 import {
-    ref,
+    reactive,
+    computed,
 } from 'vue';
-// import {useStore} from 'vuex'
+import {
+    useStore,
+} from 'vuex'
 import {
     useRouter
 } from 'vue-router'
 export default {
     setup() {
+        const store = useStore();
         const router = useRouter();
-        let userDetails = ref('');
-        // Getting the logged in user's details from local storage 
-        function updateUserDetails() {
-            if (localStorage.getItem('user') !== null) {
-                userDetails.value = JSON.parse(localStorage.getItem('user'));
-                console.log('updating user details');
-            }
-        }
-        if (localStorage.getItem('user') !== null) {
-            userDetails.value = JSON.parse(localStorage.getItem('user'));
-            console.log('updating user details');
-        }
-        //     watch(() => userDetails.value , (first , second) => {
-        //     userDetails.value = JSON.parse(localStorage.getItem('user'));
-        //     console.log('updating user details');
-        //     console.log(first, second);
+        let userDetails = reactive('');
 
-        // })
+        userDetails = computed(() => {
+            console.log(userDetails);
+            return store.state.userDetails
+        })
 
         function onSignout() {
-            localStorage.clear();
+            store.dispatch('userDetails/emptyUserDetails', {
+                root: true
+            })
             router.push('/');
-
         }
         return {
             userDetails,
             onSignout,
-            updateUserDetails
         }
     }
 }

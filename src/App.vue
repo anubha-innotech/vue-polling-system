@@ -6,7 +6,7 @@
 
 <script>
   import {
-    computed,
+    computed, onMounted,
 } from 'vue';
 import {
     useStore
@@ -24,7 +24,11 @@ export default {
         const showLoader = computed(() => {
             return store.state.showLoader
         })
-
+        onMounted(() => {
+            store.dispatch('userDetails/getUserDetails', {
+                        root: true
+                    })
+        })
         return {
             showLoader,
         }

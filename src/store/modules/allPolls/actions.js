@@ -58,5 +58,14 @@ export default {
         console.log(response);
         return true
         
+    },
+    async addPollOption(_,payload) {
+        let response = '';
+
+        response = await axios.post(
+            `https://secure-refuge-14993.herokuapp.com/add_new_option?id=${payload.pollId}&option_text=${payload.newPollOption}`
+        );
+        console.log(response);
+        return true
     }
 }

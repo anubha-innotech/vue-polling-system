@@ -3,7 +3,6 @@
 <ul>
     <li v-for="users in usersList.usersList" :key="users.id">{{users.username}}</li>
 </ul>
-{{usersList.usersList}}
 </template>
 
 <script>

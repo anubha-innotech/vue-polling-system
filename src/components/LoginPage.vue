@@ -38,6 +38,7 @@
 <script>
 import {
     ref,
+    // onMounted
 } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -102,6 +103,7 @@ export default {
                     root: true
                 })
                 console.log(result);
+                getUserDetails();
                 // Accessing store state if user successfully signs in ie. if result is true
                 if (result) {
                     storeData.value = store.state.login;
@@ -115,6 +117,20 @@ export default {
                 }
             }
         }
+
+        let userDetails = ref('');
+        const getUserDetails = () => {
+            console.log('get user details');
+            let result = "";
+                     result = store.dispatch('userDetails/getUserDetails', {
+                        root: true
+                    })
+                    if (result) {
+                        userDetails.value = store.state.userDetails;
+                    } 
+        }
+        
+
         return {
             username,
             password,
@@ -127,6 +143,8 @@ export default {
             storeData,
             showError,
             onLogin,
+            getUserDetails,
+            userDetails
         }
     }
 }

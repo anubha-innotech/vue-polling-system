@@ -2,14 +2,14 @@
 <h2>All Polls</h2>
 <div class="polls-container">
     <div v-for="(poll,pollIndex) in polls" :key="poll.id" class="poll-box">
-        <div class="poll-title">{{poll.title}}{{showPollIcons}}
+        <div class="poll-title">{{poll.title}}
             <span class="pollIcons" v-if="showPollIcons">
                 <span @click="onTitleEdit(pollIndex)">Edit&#9998;</span>
                 <span @click="onDelete(pollIndex)">Delete&#x1F5D1;</span>
             </span>
             <div class="update-poll-title-box" v-if="updateTitleIndex === pollIndex">
                 <input type="text" placeholder="Updated Poll Title" v-model="updatedTitle" />
-                <button @click="onUpdateTitle(pollIndex)">Update</button>
+                <button @click="onUpdateTitle(pollIndex)">Update</button>              
             </div>
         </div>
         <div class="poll-options">
@@ -18,10 +18,10 @@
                 <span class="vote" @click="onVote(pollIndex, optionIndex)">{{element.vote}}&#128077;</span>
                 <span class="delete" @click="deletePollOption(pollIndex, optionIndex)" v-if="showPollIcons">&#10006; </span>
             </p>
-            <div class="add-new-option" @click="addNewPollOption">+ Add  new poll option</div>
-            <div class="add-new-option-box" v-if="addNewOptionIndex === pollIndex">
-                <input type="text" placeholder="Add new poll option" v-model="newPollOption" />
-                <button @click="onAddingNewPollOption(pollIndex)">Add</button>
+            <div class="add-new-option" @click="addPollOption(pollIndex)">+ Add  new poll option</div>
+            <div class="update-poll-option-box" v-if="addPollOptionIndex === pollIndex">
+                <input type="text" placeholder="New Poll Option" v-model="newPollOption" />
+                <button @click="onAddPollOption(pollIndex)">Update</button>              
             </div>
         </div>
         <h5></h5>
@@ -53,7 +53,8 @@ export default {
         let showPollIcons = ref('false');
         let updateTitleIndex = ref('');
         let updatedTitle = ref('');
-        let addNewOptionIndex = ref('');
+        let addPollOptionIndex = ref('');
+        let newPollOption = ref('');
 
         onMounted(async () => {
             // console.log("on mounted");
@@ -83,6 +84,7 @@ export default {
                 }
             }
         });
+        
         onUpdated(async () => {
             // console.log("on mounted");
             const result = await store.dispatch('allPolls/getAllPolls', {
@@ -184,7 +186,6 @@ export default {
         }
 
         function onUpdateTitle(pollIndex) {
-            updateTitleIndex.value = '';
             let pollId = polls.value[pollIndex]._id;
             const result = store.dispatch('allPolls/onUpdateTitle', {
                 pollId: pollId,
@@ -199,23 +200,24 @@ export default {
             }
         }
 
-        function addNewPollOption(pollIndex) {
-            addNewOptionIndex.value = pollIndex;
+        function addPollOption(pollIndex) {
+            addPollOptionIndex.value = pollIndex;
         }
-        function onAddingNewPollOption() {
-            addNewOptionIndex.value = '';
-            // let pollId = polls.value[pollIndex]._id;
-            // const result = store.dispatch('allPolls/addNewPollOption', {
-            //     pollId: pollId,
-            //     updatedTitle: updatedTitle.value,
-            // }, {
-            //     root: true
-            // })
-            // console.log(result);
-            // if (result) {
-            //     updateTitleIndex.value = '';
-            //     updatedTitle.value = '';
-            // }
+
+        function onAddPollOption(pollIndex) {
+            console.log('add poll option');
+            let pollId = polls.value[pollIndex]._id;
+            const result = store.dispatch('allPolls/addPollOption', {
+                pollId: pollId,
+                newPollOption: newPollOption.value,
+            }, {
+                root: true
+            })
+            console.log(result);
+            if (result) {
+                addPollOptionIndex.value = '';
+                newPollOption.value = '';
+            }
         }
 
         return {
@@ -235,9 +237,10 @@ export default {
             updateTitleIndex,
             updatedTitle,
             onTitleEdit,
-            addNewOptionIndex,
-            addNewPollOption,
-            onAddingNewPollOption
+            addPollOption,
+            addPollOptionIndex,
+            onAddPollOption,
+            newPollOption,
         }
     }
 }
