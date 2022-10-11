@@ -1,35 +1,31 @@
 <template>
-    my account page
-    {{userDetails}}
+<h2>My Account</h2>
+<div class="account-container">
+    <h5>USERNAME : {{userDetails.name}}</h5>
+    <h5>ROLE : {{userDetails.role}}</h5>
+    <h5>PASSWORD : {{userDetails.password}}</h5>
+</div>
 </template>
 
 <script>
-    import {
-    // ref,
-    // toRef,
-    // beforeRouteLeave,
-    // reactive,
-    // isReactive,
-    // isRef,
-    // toRefs,
-    // computed,
-    // watch
-} from 'vue';
+import {} from 'vue';
 // import { useStore } from 'vuex';
-    export default{
-        setup() {
-        //     const store = useStore();
-        //      const userDetails = computed(() => {
-        //     return store.state.signup
-        // })
-            let userDetails = '';
-            // Getting the logged in user's details from local storage 
-            if(localStorage.getItem('user') !== null){
-                userDetails = JSON.parse(localStorage.getItem('user'));
-            }
-            return{
-                userDetails,
-            }
+export default {
+    setup() {
+        let userDetails = '';
+        // Getting the logged in user's details from local storage 
+        if (localStorage.getItem('user') !== null) {
+            userDetails = JSON.parse(localStorage.getItem('user'));
+        }
+        return {
+            userDetails,
         }
     }
+}
 </script>
+
+<style>
+.account-container {
+    text-align: center;
+}
+</style>

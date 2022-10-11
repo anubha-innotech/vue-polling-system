@@ -1,20 +1,15 @@
 import actions from "./actions";
 import mutations from "./mutations";
-import getters from "./getters";
+// import getters from "./getters";
 
 export default {
     namespaced : true,
     state() {
         return {           
-            password: '',
-            id : '',
-            username: '',
-            role: '',
-            error: '',
-            errorMessage: '',
+            userDetails: '',
         }
     },
-    getters: getters,
+    getters: {},
     mutations: mutations,
     actions: actions,
 };
